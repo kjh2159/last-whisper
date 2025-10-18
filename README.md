@@ -15,6 +15,60 @@ conda install ffmpeg
 pip install -r "requirements.txt"
 ```
 
+## 2. Usage
+
+To use ***LAST WHISPER***, please refer to the following examples or options, the next section. 
+
+```shell
+# basic usage (url)
+python transcribe.py --url "https://youtube.com/video1"
+```
+
+```shell
+# basic usage (local file)
+python transcribe.py --url "audio.mp3"
+```
+
+```shell
+# language setting
+python transcribe.py --url "https://youtube.com/video1" --language ko
+```
+> **TIP**: The program would detect video language if you do not specify the language.
+
+```shell
+# multiple urls or files
+python transcribe.py --url "https://youtube.com/video1" "https://youtube.com/video2"
+```
+
+```shell
+# see also verbose progress
+python transcribe.py --url "https://youtube.com/video1" --verbose
+```
+
+```shell
+# save result with timeline
+python transcribe.py --url "https://youtube.com/video1" --timeline
+```
+
+> **TIP**: Other online video sources (e.g., vimeo) are available except for YouTube.
+
+## 3. Options
+
+To see available options, run the following command.
+```shell
+python transcribe.py --help
+```
+
+## 4. Customization
+
+To customize the execution, see `constant/options.py`.<br>
+From this, you can change the pre-set model, `turbo`.
+```py
+# constant/options.py
+MODEL='small'
+```
+> **TIP**: Highly recommend use turbo model.
+
 ## *Future Roadmap*
 
 - A feature of separation of multiple speakers
