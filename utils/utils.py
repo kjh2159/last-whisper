@@ -58,5 +58,12 @@ def remove_files(paths: List[str]):
             print(f"Failed to remove '{p}': {e}")
             continue
 
+
+# to check gpu usage
+def print_model_device(tr):
+    p = next(tr.parameters())
+    print(f"[whisper] model.param.device={p.device}, dtype={p.dtype}")
+
+
 if __name__ == "__main__":
     print(get_file_type(".cache/test.webm"))
