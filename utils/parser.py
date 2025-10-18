@@ -14,10 +14,10 @@ def parse_arguments():
                              help='Local audio/video file path to transcribe')
     
     # extra options
-    parser.add_argument('-m', '--model',
-                       choices=['tiny', 'base', 'small', 'medium', 'large'],
-                       default='base',
-                       help='Whisper model size (default: base)')
+    # parser.add_argument('-m', '--model',
+    #                    choices=['tiny', 'base', 'small', 'medium', 'large', 'turbo'],
+    #                    default='base',
+    #                    help='Whisper model size (default: base)')
     parser.add_argument('-l', '--language',
                        default=None,
                        help='Language spoken in audio [en, ko, Japanese, ...]')
