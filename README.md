@@ -10,6 +10,11 @@ I highly recommend to use virtual environments through anaconda.
 # venv
 conda create --name last-whisper python=3.13
 conda install ffmpeg
+conda activate last-whisper
+
+# clone repository
+git clone https://github.com/kjh2159/last-whisper.git
+cd last-whisper
 
 # requirements
 pip install -r "requirements.txt"
