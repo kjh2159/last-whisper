@@ -5,9 +5,10 @@
 The ***LAST WHISPER*** has a key feature to transcribe the online video or audio resources as well as local files.
 
 ## 0. Demo
-
+<video controls muted playsinline width="720" src="https://github.com/user-attachments/assets/56b500f6-b06a-4fff-a612-c7498b4b0583"></video>
 
 ## 1. Setup
+
 I highly recommend to use virtual environments through anaconda.
 ```shell
 # clone repository
