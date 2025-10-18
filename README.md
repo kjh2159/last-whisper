@@ -7,17 +7,23 @@ The ***LAST WHISPER*** has a key feature to transcribe the online video or audio
 ## 1. Setup
 I highly recommend to use virtual environments through anaconda.
 ```shell
-# venv
-conda create --name last-whisper python=3.13
-conda install ffmpeg
-conda activate last-whisper
-
 # clone repository
 git clone https://github.com/kjh2159/last-whisper.git
 cd last-whisper
 
+# venv
+conda create --name last-whisper python=3.13
+conda activate last-whisper
+conda install ffmpeg
+
 # requirements
 pip install -r "requirements.txt"
+```
+
+**⚠️ CAUTION**: MacOS users should run the following command also.
+
+```shell
+brew install libmagic
 ```
 
 ## 2. Usage
