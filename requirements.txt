@@ -2,3 +2,4 @@
 yt-dlp[default]
 git+https://github.com/openai/whisper.git
 python-magic
+whisperx

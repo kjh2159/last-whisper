@@ -22,6 +22,9 @@ from utils.utils import (
 # core external modules
 import yt_dlp
 import whisper
+import whisperx
+import gc
+from whisperx.diarize import DiarizationPipeline
 
 
 def refine_download_option(args: argparse.Namespace):
@@ -46,13 +49,18 @@ def download_audio(urls: List[str]) -> List[str]:
 
 
 def transcribe(tr: whisper.Whisper, sources: List[str]):
+    results = []
+    audios = []
     for source in sources[1:]:
-        result = tr.transcribe(source, 
+        audio = whisper.load_audio(source)  # pre-load to avoid cuda out of memory
+        result = tr.transcribe(audio, 
                                verbose=args.verbose,
                                language=args.language
                                )
+        audios.append(audio)
+        results.append(result)
         save_transcription(result, source)
-    return
+    return audios, results
 
 
 def save_transcription(transcription: dict[str, str | list], f: str):
@@ -81,6 +89,7 @@ def save_transcription(transcription: dict[str, str | list], f: str):
 
 def main(args: argparse.Namespace):
     # main function    
+    device = "cuda"
     downloaded_files: List[str] = [CACHE_PATH]
     transcriber: whisper.Whisper = whisper.load_model(MODEL)
 
@@ -99,7 +108,20 @@ def main(args: argparse.Namespace):
 
     # transcription
     print(f"Try transcribing the audio source(s)")
-    transcribe(transcriber, downloaded_files)
+    audios, results = transcribe(transcriber, downloaded_files)
+
+    for audio, result in zip(audios, results):
+        model_a, metadata = whisperx.load_align_model(language_code=result["language"], device=device)
+        alignment = whisperx.align(result["segments"], model_a, metadata, audio, device, return_char_alignments=False)
+        # print(alignment["segments"])
+
+        diarize_model = DiarizationPipeline(use_auth_token="HF-TOKEN", device=device)
+        diarize_segments = diarize_model(audio)
+        result = whisperx.assign_word_speakers(diarize_segments, result)
+
+        print(diarize_segments)
+        for seg in result["segments"]:
+            print(f"{seg["speaker"]}: {seg["text"]}")
 
     # postprocessing
     print(f"Try postprocessing")
