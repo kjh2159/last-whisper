@@ -84,6 +84,10 @@ MODEL='small'
 ```
 > **TIP**: Highly recommend use turbo model.
 
+## *Issues*
+
+Please let me know about issues you are going through to `issue` or `discussion` tab!
+
 ## *Future Roadmap*
 
 - A feature of separation of multiple speakers
