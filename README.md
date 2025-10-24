@@ -23,8 +23,10 @@ conda install ffmpeg
 # requirements
 pip install -r "requirements.txt"
 ```
+> **⚠️**
+> Please fill your ***huggingface-token*** in [here](transcribe.py#L118).
 
-**⚠️ CAUTION**: MacOS users should run the following command also.
+**🍎MacOS** should run the following command also.
 
 ```shell
 brew install libmagic
