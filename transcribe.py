@@ -18,6 +18,10 @@ from utils.utils import (
     join_path_str,
     remove_files
 )
+from utils.credential import (
+    ensure_env_and_load,
+    require_credential
+)
 
 # core external modules
 import yt_dlp
@@ -88,6 +92,11 @@ def save_transcription(transcription: dict[str, str | list], f: str):
 
 
 def main(args: argparse.Namespace):
+    # dotenv_path = ensure_env_and_load() # ensure .env file (make if not exists)
+    hf_token = require_credential(
+        key="HUGGINGFACE_TOKEN", confirm=False
+    )
+
     # main function    
     device = "cuda"
     downloaded_files: List[str] = [CACHE_PATH]
@@ -115,7 +124,7 @@ def main(args: argparse.Namespace):
         alignment = whisperx.align(result["segments"], model_a, metadata, audio, device, return_char_alignments=False)
         # print(alignment["segments"])
 
-        diarize_model = DiarizationPipeline(use_auth_token="HF-TOKEN", device=device)
+        diarize_model = DiarizationPipeline(use_auth_token=hf_token, device=device)
         diarize_segments = diarize_model(audio)
         result = whisperx.assign_word_speakers(diarize_segments, result)
 
