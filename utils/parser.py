@@ -27,5 +27,8 @@ def parse_arguments():
     parser.add_argument('-t', '--timeline',
                        action='store_true',
                        help='Show detailed transcription progress')
+    parser.add_argument('-sd', '--speaker-diarization',
+                       action='store_true',
+                       help='Set speaker diarization mode on (need Huggingface token)')
     
     return parser.parse_args()

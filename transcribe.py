@@ -93,9 +93,10 @@ def save_transcription(transcription: dict[str, str | list], f: str):
 
 def main(args: argparse.Namespace):
     # dotenv_path = ensure_env_and_load() # ensure .env file (make if not exists)
-    hf_token = require_credential(
-        key="HUGGINGFACE_TOKEN", confirm=False
-    )
+    if args.speaker_diarization:
+        hf_token = require_credential(
+            key="HUGGINGFACE_TOKEN", confirm=False
+        )
 
     # main function    
     device = "cuda"
@@ -119,18 +120,19 @@ def main(args: argparse.Namespace):
     print(f"Try transcribing the audio source(s)")
     audios, results = transcribe(transcriber, downloaded_files)
 
-    for audio, result in zip(audios, results):
-        model_a, metadata = whisperx.load_align_model(language_code=result["language"], device=device)
-        alignment = whisperx.align(result["segments"], model_a, metadata, audio, device, return_char_alignments=False)
-        # print(alignment["segments"])
+    if args.speaker_diarization:
+        for audio, result in zip(audios, results):
+            model_a, metadata = whisperx.load_align_model(language_code=result["language"], device=device)
+            alignment = whisperx.align(result["segments"], model_a, metadata, audio, device, return_char_alignments=False)
+            # print(alignment["segments"])
 
-        diarize_model = DiarizationPipeline(use_auth_token=hf_token, device=device)
-        diarize_segments = diarize_model(audio)
-        result = whisperx.assign_word_speakers(diarize_segments, result)
+            diarize_model = DiarizationPipeline(use_auth_token=hf_token, device=device)
+            diarize_segments = diarize_model(audio)
+            result = whisperx.assign_word_speakers(diarize_segments, result)
 
-        print(diarize_segments)
-        for seg in result["segments"]:
-            print(f"{seg["speaker"]}: {seg["text"]}")
+            print(diarize_segments)
+            for seg in result["segments"]:
+                print(f"{seg["speaker"]}: {seg["text"]}")
 
     # postprocessing
     print(f"Try postprocessing")
