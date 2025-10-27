@@ -23,8 +23,6 @@ conda install ffmpeg
 # requirements
 pip install -r "requirements.txt"
 ```
-> **⚠️**
-> Please fill your ***huggingface-token*** in [here](transcribe.py#L118).
 
 **🍎MacOS** should run the following command also.
 
@@ -35,6 +33,9 @@ brew install libmagic
 ## 2. Usage
 
 To use ***LAST WHISPER***, please refer to the following examples or options, the next section. 
+> **⚠️**
+> To use it, you should make private huggingface token. 
+> <br>Please refer to huggingface site [here](https://huggingface.co/) for signing up and creating huggingface token.
 
 ```shell
 # basic usage (url)
