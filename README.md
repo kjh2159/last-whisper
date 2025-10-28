@@ -37,6 +37,7 @@ To use ***LAST WHISPER***, please refer to the following examples or options, th
 > To use it, you should make private huggingface token. 
 > <br>Please refer to huggingface site [here](https://huggingface.co/) for signing up and creating huggingface token.
 
+### *A. Basic usage*
 ```shell
 # basic usage (url)
 python transcribe.py --url "https://youtube.com/video1"
@@ -69,6 +70,18 @@ python transcribe.py --url "https://youtube.com/video1" --timeline
 ```
 
 > **TIP**: Other online video sources (e.g., vimeo) are available except for YouTube.
+
+### *B. Diarization mode*
+```shell
+# basic diarization mode 
+python transcribe.py --url "https://youtube.com/video1" --sd # or --speaker-diarization
+```
+
+```shell
+# diarization with timeline
+python transcribe.py --url "https://youtube.com/video1" --sd --timeline
+```
+
 
 ## 3. Options
 
