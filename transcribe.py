@@ -110,6 +110,7 @@ def diarize(audios: List[str], results: List[dict], sources: List[str], hf_token
 def main(args: argparse.Namespace):
     # dotenv_path = ensure_env_and_load() # ensure .env file (make if not exists)
     if args.speaker_diarization:
+        ensure_env_and_load()
         hf_token = require_credential(
             key="HUGGINGFACE_TOKEN", confirm=False
         )
