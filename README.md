@@ -24,7 +24,7 @@ conda install ffmpeg
 pip install -r "requirements.txt"
 ```
 
-**🍎MacOS** should run the following command also.
+**🍎MacOS** should run the following command also. However, GPU operations are not supported on MacOS.
 
 ```shell
 brew install libmagic
@@ -111,4 +111,4 @@ Please let me know about issues you are going through to `issue` or `discussion`
 
 ## *Acknowledgement*
 
-This python program is an extended appliaction integrating [yt_dlp](https://github.com/yt-dlp/yt-dlp) and [whisper](https://github.com/openai/whisper).
+This python program is an extended appliaction integrating [yt_dlp](https://github.com/yt-dlp/yt-dlp), [whisper](https://github.com/openai/whisper), and [whisperX](https://github.com/m-bain/whisperX).
