@@ -63,7 +63,8 @@ def transcribe(tr: whisper.Whisper, sources: List[str]):
                                )
         audios.append(audio)
         results.append(result)
-        save_transcription(result, source)
+        if args.speaker_diarization:
+            save_transcription(result, source)
     return audios, results
 
 
@@ -90,6 +91,21 @@ def save_transcription(transcription: dict[str, str | list], f: str):
         f.write(buff.getvalue()) # buffer write
     return
 
+
+def diarize(audios: List[str], results: List[dict], sources: List[str], hf_token: str, device: str):
+    for i, source in enumerate(sources[1:]):
+        # for test
+        # model_a, metadata = whisperx.load_align_model(language_code=result["language"], device=device)
+        # alignment = whisperx.align(result["segments"], model_a, metadata, audio, device, return_char_alignments=False)
+        # print(alignment["segments"])
+
+        diarize_model = DiarizationPipeline(use_auth_token=hf_token, device=device)
+        diarize_segments = diarize_model(audios[i])
+        result = whisperx.assign_word_speakers(diarize_segments, results[i])
+
+        print(diarize_segments)
+        for seg in result["segments"]:
+            print(f"{seg["speaker"]}: {seg["text"]}")
 
 def main(args: argparse.Namespace):
     # dotenv_path = ensure_env_and_load() # ensure .env file (make if not exists)
@@ -119,20 +135,12 @@ def main(args: argparse.Namespace):
     # transcription
     print(f"Try transcribing the audio source(s)")
     audios, results = transcribe(transcriber, downloaded_files)
+    print(f"Complete transcribing the audio source(s)")
 
     if args.speaker_diarization:
-        for audio, result in zip(audios, results):
-            model_a, metadata = whisperx.load_align_model(language_code=result["language"], device=device)
-            alignment = whisperx.align(result["segments"], model_a, metadata, audio, device, return_char_alignments=False)
-            # print(alignment["segments"])
-
-            diarize_model = DiarizationPipeline(use_auth_token=hf_token, device=device)
-            diarize_segments = diarize_model(audio)
-            result = whisperx.assign_word_speakers(diarize_segments, result)
-
-            print(diarize_segments)
-            for seg in result["segments"]:
-                print(f"{seg["speaker"]}: {seg["text"]}")
+        print(f"Try speaker diarization")
+        diarize(audios, results, downloaded_files, hf_token, device)
+        print(f"Complete speaker diarization")
 
     # postprocessing
     print(f"Try postprocessing")
