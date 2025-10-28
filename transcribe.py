@@ -16,7 +16,8 @@ from utils.parser import (
 )
 from utils.utils import (
     join_path_str,
-    remove_files
+    remove_files, 
+    fmt_time
 )
 from utils.credential import (
     ensure_env_and_load,
@@ -27,7 +28,6 @@ from utils.credential import (
 import yt_dlp
 import whisper
 import whisperx
-import gc
 from whisperx.diarize import DiarizationPipeline
 
 
@@ -75,11 +75,15 @@ def save_transcription(transcription: dict[str, str | list], f: str):
         os.path.splitext( f.split('/')[-1] )[0] + '.txt'
     )
     buff = io.StringIO()   # buffer
-    
+
+    total_duration = transcription['segments'][-1]['end']
+    use_hours = total_duration >= 3600.0
+
     # save a file with timeline
     if args.timeline:
         lines = [
-            f'[{seg['start']:.3} ---> {seg['end']:.3}] {seg['text']}\n' 
+            f'[{fmt_time(seg["start"], use_hours)} ---> {fmt_time(seg["end"], use_hours)}] '
+            f'{seg["text"]}\n' 
                 for seg in transcription['segments']
         ]
     else:
@@ -115,14 +119,18 @@ def save_diarization(result: dict[str, str | list], f: str):
     )
     buff = io.StringIO()   # buffer
     
+    total_duration = result['segments'][-1]['end']
+    use_hours = total_duration >= 3600.0
+    
     # save a file with timeline
     if args.timeline:
         lines = [
-            f'[{seg['start']:.3} ---> {seg['end']:.3}] {seg['speaker']}: {seg['text']}\n' 
+            f'[{fmt_time(seg["start"], use_hours)} ---> {fmt_time(seg["end"], use_hours)}] '
+            f'{seg.get("speaker", "SPK")}: {seg["text"]}\n' 
                 for seg in result['segments']
         ]
     else:
-        lines = [ f'{seg['speaker']}: {seg['text']}\n' for seg in result['segments'] ]
+        lines = [ f'{seg.get("speaker", "SPK")}: {seg['text']}\n' for seg in result['segments'] ]
     buff.writelines(lines)
     
     # save file
@@ -169,6 +177,7 @@ def main(args: argparse.Namespace):
     # postprocessing
     print(f"Try postprocessing")
     remove_files(downloaded_files)
+    print(f"Complete postprocessing")
 
 
 

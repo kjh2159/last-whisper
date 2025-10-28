@@ -65,5 +65,18 @@ def print_model_device(tr):
     print(f"[whisper] model.param.device={p.device}, dtype={p.dtype}")
 
 
+def fmt_time(t_seconds: float, use_hours: bool) -> str:
+    """sec -> formatting into HH:MM:SS or MM:SS"""
+    t = int(t_seconds) 
+    if use_hours:
+        h = t // 3600
+        m = (t % 3600) // 60
+        s = t % 60
+        return f"{h:02d}:{m:02d}:{s:02d}"
+    else:
+        m = t // 60
+        s = t % 60
+        return f"{m:02d}:{s:02d}"
+
 if __name__ == "__main__":
     print(get_file_type(".cache/test.webm"))
