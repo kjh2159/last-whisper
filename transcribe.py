@@ -102,10 +102,33 @@ def diarize(audios: List[str], results: List[dict], sources: List[str], hf_token
         diarize_model = DiarizationPipeline(use_auth_token=hf_token, device=device)
         diarize_segments = diarize_model(audios[i])
         result = whisperx.assign_word_speakers(diarize_segments, results[i])
+        save_diarization(result, source)
+        
+        # for test
+        # for seg in result["segments"]:
+        #     print(f"{seg["speaker"]}: {seg["text"]}")
 
-        print(diarize_segments)
-        for seg in result["segments"]:
-            print(f"{seg["speaker"]}: {seg["text"]}")
+def save_diarization(result: dict[str, str | list], f: str):
+    fp_txt = join_path_str(
+        TRANSCRIPTION_PATH, 
+        os.path.splitext( f.split('/')[-1] )[0] + '_diarization.txt'
+    )
+    buff = io.StringIO()   # buffer
+    
+    # save a file with timeline
+    if args.timeline:
+        lines = [
+            f'[{seg['start']:.3} ---> {seg['end']:.3}] {seg['speaker']}: {seg['text']}\n' 
+                for seg in result['segments']
+        ]
+    else:
+        lines = [ f'{seg['speaker']}: {seg['text']}\n' for seg in result['segments'] ]
+    buff.writelines(lines)
+    
+    # save file
+    with open(fp_txt, 'w') as f:
+        f.write(buff.getvalue()) # buffer write
+    return
 
 def main(args: argparse.Namespace):
     # dotenv_path = ensure_env_and_load() # ensure .env file (make if not exists)
