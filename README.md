@@ -106,8 +106,8 @@ Please let me know about issues you are going through to `issue` or `discussion`
 
 ## *Future Roadmap*
 
-- A feature of separation of multiple speakers
-- Supports of more options for execution
+- [X] A feature of separation of multiple speakers
+- [ ] Supports of more options for execution (task, output_format, temperature, etc.)
 
 ## *Acknowledgement*
 
